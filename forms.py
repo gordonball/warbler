@@ -26,6 +26,7 @@ class LoginForm(FlaskForm):
 
 class UserEditForm(FlaskForm):
     """ Form for users to edit their profiles. """
+    
     username = StringField(
         "Username",
         validators=[
@@ -75,4 +76,3 @@ class UserEditForm(FlaskForm):
 
 class CSRFProtectForm(FlaskForm):
     """For protection against cross-site request forgery"""
-

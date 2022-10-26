@@ -28,8 +28,7 @@ connect_db(app)
 
 
 ##############################################################################
-# User signup/login/logout
-
+# app.before_requests---these run before every request!
 
 @app.before_request
 def add_user_to_g():
@@ -47,6 +46,8 @@ def add_csrf_to_g():
 
     g.csrf_form = CSRFProtectForm()
 
+##############################################################################
+# User signup/login/logout
 
 def do_login(user):
     """Log in user."""
@@ -266,18 +267,7 @@ def profile():
         return redirect(f"/users/{user.id}")
 
     else:
-
         return render_template("/users/edit.html", form=form)
-
-
-
-
-
-
-
-
-
-
 
 @app.post('/users/delete')
 def delete_user():
