@@ -4,6 +4,9 @@
 
 <div id="warbler-hero"
      class="full-width">
+    {% if user.header_image_url %}
+    <img src="{{ user.header_image_url }}" alt="Hero banner image for {{ user.username }}">
+    {% endif %}
 </div>
 <img src="{{ user.image_url }}"
      alt="Image for {{ user.username }}"
@@ -80,11 +83,17 @@
 <div class="row">
   <div class="col-sm-3">
     <h4 id="sidebar-username">@{{ user.username }}</h4>
-    <p>BIO HERE</p>
+
+    {% if user.bio %}
+    <p>{{ user.bio }}</p>
+    {% endif %}
+
+    {% if user.location %}
     <p class="user-location">
       <span class="bi bi-map"></span>
-      LOCATION HERE
+      {{ user.location }}
     </p>
+    {% endif %}
   </div>
 
   {% block user_details %}

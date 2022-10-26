@@ -170,6 +170,9 @@ def show_user(user_id):
         return redirect("/")
 
     user = User.query.get_or_404(user_id)
+    # user.bio = user.get("bio")
+    # user.location
+
 
     return render_template('users/show.html', user=user)
 
