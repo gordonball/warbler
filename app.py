@@ -117,7 +117,7 @@ def login():
 @app.post('/logout')
 def logout():
     """Handle logout of user and redirect to homepage."""
-
+    breakpoint()
     form = g.csrf_form
 
     # IMPLEMENT THIS AND FIX BUG
