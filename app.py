@@ -357,9 +357,19 @@ def homepage():
     - logged in: 100 most recent messages of followed_users
     """
 
+    # Check is logged in
     if g.user:
+        user = User.query.get_or_404(g.user.id)
+
+        # Generate a set containing id's of users whose posts we want to display
+        # Includes current user id, and those they follow
+        users_ids_list = [user.id for user in user.following]
+        users_ids_list.append(user.id)
+        users_ids_set = set(users_ids_list)
+
         messages = (Message
                     .query
+                    .filter(Message.user_id.in_(users_ids_set))
                     .order_by(Message.timestamp.desc())
                     .limit(100)
                     .all())
