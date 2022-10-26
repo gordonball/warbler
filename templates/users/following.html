@@ -35,8 +35,12 @@
             {% endif %}
 
           </div>
-          <p class="card-bio">BIO HERE</p>
-        </div>
+          {% if followed_user.bio %}
+
+          <p class="card-bio">{{ followed_user.bio }}</p>
+
+          {% endif %}
+          </div>
       </div>
     </div>
 
