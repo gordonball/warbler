@@ -379,7 +379,7 @@ def like_message(message_id):
 
     msg = Message.query.get_or_404(message_id)
 
-    g.user.add_new_like(msg.id)
+    g.user.toggle_liked(msg.id)
 
     url_parse = urlparse(request.referrer)
     path = url_parse.path

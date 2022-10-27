@@ -171,27 +171,32 @@ class User(db.Model):
         db.session.add(new_like)
         db.session.commit()
 
+        return len(Likes.query.filter(Likes.user_id==self.id).all())
+
+    def remove_like(self, message_id):
+        """Remove like from user's liked messages"""
+
+        liked = Likes.query.get_or_404((self.id, message_id))
+        db.session.delete(liked)
+        db.session.commit()
 
         return len(Likes.query.filter(Likes.user_id==self.id).all())
 
     def is_liked(self, message_id):
+        """Check if message_id is liked by current user. Returns boolean"""
 
         liked = Likes.query.filter(Likes.user_id==self.id, Likes.message_id==message_id).one_or_none()
 
         return bool(liked)
 
+    def toggle_liked(self, message_id):
+        """Toggles liked status of message"""
 
+        if self.is_liked(message_id):
+            self.remove_like(message_id)
+        else:
+            self.add_new_like(message_id)
 
-    # TODO:
-    # def get_liked_messages(self):
-    #     """Returns list of messages liked by current user."""
-
-    #     Message.query
-
-    # def is_liked(self, message_id):
-    #     """Check if message_id is liked by current user. Returns boolean"""
-
-    #     Likes.query()
 
 class Message(db.Model):
     """An individual message ("warble")."""
