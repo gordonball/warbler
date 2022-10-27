@@ -40,6 +40,7 @@ def add_user_to_g():
     else:
         g.user = None
 
+
 @app.before_request
 def add_csrf_to_g():
     """Add a csrf form to g"""
@@ -134,7 +135,7 @@ def logout():
 
     else:
         flash("Unauthorized")
-        return redirect("/" ) #TODO: send them to 403 unauthorized
+        return redirect("/") #TODO: send them to 403 unauthorized
 
 
 
@@ -246,7 +247,7 @@ def profile():
         flash("You must be logged in to edit profile!", "danger")
         return redirect("/")
 
-    user = User.query.get_or_404(g.user.id)
+    user = g.user 
 
     form = UserEditForm(obj=user)
 
@@ -254,7 +255,7 @@ def profile():
 
         if User.authenticate(user.username, form.password.data) == False:
             flash("Incorrect password")
-            return render_template("/edit.html", form=form)
+            return render_template("/users/edit.html", form=form)
 
         user.username = form.username.data
         user.email = form.email.data
@@ -275,7 +276,7 @@ def delete_user():
 
     Redirect to signup page.
     """
-
+#TODO: DANGER: all post routes change the world! therefore should have csfr protection!
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -359,11 +360,11 @@ def homepage():
 
     # Check is logged in
     if g.user:
-        user = User.query.get_or_404(g.user.id)
+        user = g.user
 
         # Generate a set containing id's of users whose posts we want to display
         # Includes current user id, and those they follow
-        users_ids_list = [user.id for user in user.following]
+        users_ids_list = [user.id for user in user.following] #NOTE: name?
         users_ids_list.append(user.id)
         users_ids_set = set(users_ids_list)
 

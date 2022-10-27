@@ -3,10 +3,8 @@
 {% block content %}
 
 <div id="warbler-hero"
-     class="full-width">
-    {% if user.header_image_url %}
-    <img src="{{ user.header_image_url }}" alt="Hero banner image for {{ user.username }}">
-    {% endif %}
+     class="full-width"
+     style="background-image: url('{{ user.header_image_url }}')">
 </div>
 <img src="{{ user.image_url }}"
      alt="Image for {{ user.username }}"
