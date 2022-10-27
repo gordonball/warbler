@@ -247,7 +247,7 @@ def profile():
         flash("You must be logged in to edit profile!", "danger")
         return redirect("/")
 
-    user = g.user 
+    user = g.user
 
     form = UserEditForm(obj=user)
 
@@ -344,6 +344,20 @@ def delete_message(message_id):
     db.session.commit()
 
     return redirect(f"/users/{g.user.id}")
+
+TODO: finish
+@app.post('/messages/<int:message_id>/like')
+def like_message(message_id):
+    """ Adds liked message to database and fills icon to show liked status. """
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    msg = Message.query.get_or_404(message_id)
+
+    db.session.
+    db.session.commit()
 
 
 ##############################################################################

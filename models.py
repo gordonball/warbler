@@ -29,6 +29,22 @@ class Follows(db.Model):
         primary_key=True,
     )
 
+class Likes(db.Model):
+    """Connection of a user <-> liked message."""
+
+    __tablename__ = 'likes'
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id', ondelete="cascade"),
+        primary_key=True,
+    )
+
+    message_id = db.Column(
+        db.Integer,
+        db.ForeignKey('messages.id', ondelete="cascade"),
+        primary_key=True,
+    )
 
 class User(db.Model):
     """User in the system."""
@@ -76,6 +92,15 @@ class User(db.Model):
     )
 
     messages = db.relationship('Message', backref="user")
+
+    #TODO:
+    liked_messages = db.relationship(
+        'Message',
+        secondary="likes",
+        primaryjoin=(Likes.user_id == id),
+        secondaryjoin=(Likes.message_id == id),
+        backref="users_liked"
+    )
 
     followers = db.relationship(
         "User",
