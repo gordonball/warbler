@@ -1,3 +1,24 @@
+Two questions
+
+1. is our reroute via request.referrer a good way to do this?
+    a. it goes to top of page...
+    b. we need to re-render html because jinja needs to fill/unfill stars!!
+        i. so... cache-ing problem??
+        
+2. what is up with our db.relationship User <--> Liked Message
+
+3. what is in the session anyway?
+what about
+@app.after_request
+def history_()
+    history = session.get('history', [])
+    history.append((
+        request.endpoint,
+        request.args
+    ))
+# is this good??
+
+
 How is the logged in user being kept track of?
 The persistent memory for the logged-in user is in the session (browser session, using the underlying technology of cookies)
 

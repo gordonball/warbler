@@ -93,21 +93,18 @@ class User(db.Model):
 
     messages = db.relationship('Message', backref="user")
 
-    #TODO:
-    liked_messages = db.relationship(
-        'Message',
-        secondary="likes",
-        primaryjoin=(Likes.user_id == id),
-        secondaryjoin=(Likes.message_id == id),
-        backref="users_liked"
-    )
-
     followers = db.relationship(
         "User",
         secondary="follows",
         primaryjoin=(Follows.user_being_followed_id == id),
         secondaryjoin=(Follows.user_following_id == id),
         backref="following",
+    )
+
+    liked_messages = db.relationship(
+        'Message',
+        secondary="likes",
+        backref="users_liked"
     )
 
     def __repr__(self):
@@ -175,6 +172,17 @@ class User(db.Model):
         db.session.commit()
 
         return len(Likes.query.filter(Likes.user_id==self.id).all())
+
+    # TODO:
+    # def get_liked_messages(self):
+    #     """Returns list of messages liked by current user."""
+
+    #     Message.query
+
+    # def is_liked(self, message_id):
+    #     """Check if message_id is liked by current user. Returns boolean"""
+
+    #     Likes.query()
 
 class Message(db.Model):
     """An individual message ("warble")."""

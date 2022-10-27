@@ -9,6 +9,8 @@ from sqlalchemy.exc import IntegrityError
 from forms import CSRFProtectForm, UserAddForm, LoginForm, MessageForm, UserEditForm
 from models import db, connect_db, User, Message
 
+from urllib.parse import urlparse
+
 load_dotenv()
 
 CURR_USER_KEY = "curr_user"
@@ -54,6 +56,20 @@ def add_previous_url_to_g():
 
     g.previous_url = request.path
     g.test_url = request.url
+
+##############################################################################
+# app.after_requests---these run after every request!
+
+# @app.after_request
+# def add_history_to_session(resp):
+#     """Add URL to history in the browser session"""
+
+#     history = session.get('history', [])
+#     history.append((
+#         request.endpoint,
+#         request.args,
+#     ))
+
 
 ##############################################################################
 # User signup/login/logout
@@ -180,9 +196,6 @@ def show_user(user_id):
         return redirect("/")
 
     user = User.query.get_or_404(user_id)
-    # user.bio = user.get("bio")
-    # user.location
-
 
     return render_template('users/show.html', user=user)
 
@@ -367,12 +380,11 @@ def like_message(message_id):
     msg = Message.query.get_or_404(message_id)
 
     g.user.add_new_like(msg.id)
-    breakpoint()
-    return render_template('/users')
 
+    url_parse = urlparse(request.referrer)
+    path = url_parse.path
 
-
-
+    return redirect(path)
 
 
 ##############################################################################

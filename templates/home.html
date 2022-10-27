@@ -59,6 +59,7 @@
               <form method="POST" action="/messages/{{ msg.id }}/like">
                 {{ g.csrf_form.csrf_token }}
                 <button class="messages-like-bottom">
+                  {% if %}
                   <i class="bi bi-hand-thumbs-up"></i>
                 </button>
               </form>
