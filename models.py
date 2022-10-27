@@ -171,7 +171,16 @@ class User(db.Model):
         db.session.add(new_like)
         db.session.commit()
 
+
         return len(Likes.query.filter(Likes.user_id==self.id).all())
+
+    def is_liked(self, message_id):
+
+        liked = Likes.query.filter(Likes.user_id==self.id, Likes.message_id==message_id).one_or_none()
+
+        return bool(liked)
+
+
 
     # TODO:
     # def get_liked_messages(self):
