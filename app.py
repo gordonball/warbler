@@ -231,7 +231,13 @@ def start_following(follow_id):
     Redirect to following page for the current for the current user.
     """
 
+
     if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    form = g.csrf_form
+    if form.validate_on_submit == False:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
@@ -250,6 +256,11 @@ def stop_following(follow_id):
     """
 
     if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    form = g.csrf_form
+    if form.validate_on_submit == False:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
@@ -301,6 +312,12 @@ def delete_user():
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
+
+    form = g.csrf_form
+    if form.validate_on_submit == False:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
 
     do_logout()
 

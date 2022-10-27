@@ -44,7 +44,7 @@
           </li>
           <li class="stat">
             <p class="small">Likes</p>
-            <h4>TBD</h4>
+            <h4>{{ user.get_my_likes() | length }}</h4>
           </li>
 
           <li class="ms-auto">
@@ -53,6 +53,7 @@
               Edit Profile
             </a>
             <form method="POST" action="/users/delete">
+            {{ g.csrf_form.csrf_token }}
               <button class="btn btn-outline-danger ms-2">
                 Delete Profile
               </button>
@@ -61,10 +62,12 @@
             {% if g.user.is_following(user) %}
             <form method="POST"
                   action="/users/stop-following/{{ user.id }}">
+            {{ g.csrf_form.csrf_token }}
               <button class="btn btn-primary">Unfollow</button>
             </form>
             {% else %}
             <form method="POST" action="/users/follow/{{ user.id }}">
+            {{ g.csrf_form.csrf_token }}
               <button class="btn btn-outline-primary">Follow</button>
             </form>
             {% endif %}

@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 {% block content %}
   <div class="row">
@@ -60,7 +61,7 @@
                 {{ g.csrf_form.csrf_token }}
                 <button class="messages-like-bottom">
 
-                  <i class="bi bi-hand-thumbs-up{% if g.user.is_liked(msg.id) %}-filled{% endif %}"></i>
+                  <i class="bi bi-hand-thumbs-up{% if g.user.is_liked(msg.id) %}-fill{% endif %}"></i>
 
                 </button>
               </form>

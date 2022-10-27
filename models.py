@@ -197,6 +197,15 @@ class User(db.Model):
         else:
             self.add_new_like(message_id)
 
+    def get_my_likes(self):
+        """Returns list of likes this user's messages have gotten"""
+
+        messages_id_list = [message.id for message in self.messages]
+        messages_id_set = set(messages_id_list)
+        likes = Likes.query.filter(Likes.message_id.in_(messages_id_set)).all()
+
+        return likes
+
 
 class Message(db.Model):
     """An individual message ("warble")."""
