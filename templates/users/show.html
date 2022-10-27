@@ -20,9 +20,9 @@
               {{ message.timestamp.strftime('%d %B %Y') }}
             </span>
         <p>{{ message.text }}</p>
-        <form action="/messages/{{ message.id }}/like">
+        <form method="POST" action="/messages/{{ message.id }}/like">
           {{ g.csrf_form.csrf_token }}
-          <button>
+          <button class="messages-like-bottom">
             <i class="bi bi-hand-thumbs-up"></i>
           </button>
         </form>

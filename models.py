@@ -161,12 +161,20 @@ class User(db.Model):
         return len(found_user_list) == 1
 
     def is_following(self, other_user):
-        """Is this user following `other_use`?"""
+        """Is this user following `other_user`?"""
 
         found_user_list = [
             user for user in self.following if user == other_user]
         return len(found_user_list) == 1
 
+    def add_new_like(self, message_id):
+        """Adds liked message to this user"""
+
+        new_like = Likes(user_id=self.id, message_id=message_id)
+        db.session.add(new_like)
+        db.session.commit()
+
+        return len(Likes.query.filter(Likes.user_id==self.id).all())
 
 class Message(db.Model):
     """An individual message ("warble")."""

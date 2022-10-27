@@ -1,4 +1,5 @@
 import os
+
 from dotenv import load_dotenv
 
 from flask import Flask, render_template, request, flash, redirect, session, g
@@ -46,6 +47,13 @@ def add_csrf_to_g():
     """Add a csrf form to g"""
 
     g.csrf_form = CSRFProtectForm()
+
+@app.before_request
+def add_previous_url_to_g():
+    """Add url of previous page before request to g."""
+
+    g.previous_url = request.path
+    g.test_url = request.url
 
 ##############################################################################
 # User signup/login/logout
@@ -345,7 +353,9 @@ def delete_message(message_id):
 
     return redirect(f"/users/{g.user.id}")
 
-TODO: finish
+
+
+
 @app.post('/messages/<int:message_id>/like')
 def like_message(message_id):
     """ Adds liked message to database and fills icon to show liked status. """
@@ -356,8 +366,13 @@ def like_message(message_id):
 
     msg = Message.query.get_or_404(message_id)
 
-    db.session.
-    db.session.commit()
+    g.user.add_new_like(msg.id)
+    breakpoint()
+    return render_template('/users')
+
+
+
+
 
 
 ##############################################################################
