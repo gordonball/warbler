@@ -308,7 +308,6 @@ def delete_user():
 
     Redirect to signup page.
     """
-#TODO: DANGER: all post routes change the world! therefore should have csfr protection!
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/")
@@ -317,7 +316,6 @@ def delete_user():
     if form.validate_on_submit == False:
         flash("Access unauthorized.", "danger")
         return redirect("/")
-
 
     do_logout()
 
@@ -377,6 +375,12 @@ def delete_message(message_id):
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
+    form = g.csrf_form
+    if validate_on_submit == False:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+
     msg = Message.query.get_or_404(message_id)
     db.session.delete(msg)
     db.session.commit()
@@ -391,6 +395,11 @@ def like_message(message_id):
     """ Adds liked message to database and fills icon to show liked status. """
 
     if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    form = g.csrf_form
+    if form.validate_on_submit == False:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
