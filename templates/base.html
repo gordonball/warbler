@@ -57,7 +57,7 @@
         </li>
         <li><a href="/messages/new">New Message</a></li>
         <form method="POST" action="/logout" id="logout_form">
-          {{ g.csrf_form.csrf_token }} <!-- TODO: make this hidden? -->
+          {{ g.csrf_form.csrf_token }}
           <button>Logout</button>
         </form>
       {% endif %}

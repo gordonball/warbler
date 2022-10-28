@@ -376,7 +376,7 @@ def delete_message(message_id):
         return redirect("/")
 
     form = g.csrf_form
-    if validate_on_submit == False:
+    if form.validate_on_submit == False:
         flash("Access unauthorized.", "danger")
         return redirect("/")
 
@@ -407,10 +407,11 @@ def like_message(message_id):
 
     g.user.toggle_liked(msg.id)
 
-    url_parse = urlparse(request.referrer)
-    path = url_parse.path
+    # url_parse = urlparse(request.referrer)
+    # path = url_parse.path
 
-    return redirect(path)
+    go_back_to = request.form["from-url"]
+    return redirect(go_back_to)
 
 
 ##############################################################################

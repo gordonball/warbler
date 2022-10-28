@@ -57,14 +57,7 @@
               <a href="/users/{{ msg.user.id }}">@{{ msg.user.username }}</a>
               <span class="text-muted">{{ msg.timestamp.strftime('%d %B %Y') }}</span>
               <p>{{ msg.text }}</p>
-              <form method="POST" action="/messages/{{ msg.id }}/like">
-                {{ g.csrf_form.csrf_token }}
-                <button class="messages-like-bottom">
-
-                  <i class="bi bi-hand-thumbs-up{% if g.user.is_liked(msg.id) %}-fill{% endif %}"></i>
-
-                </button>
-              </form>
+              {% include "includes/like-button.html" %}
             </div>
           </li>
         {% endfor %}
