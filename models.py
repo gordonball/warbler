@@ -165,7 +165,9 @@ class User(db.Model):
         return len(found_user_list) == 1
 
     def add_new_like(self, message_id):
-        """Adds liked message to this user"""
+        """Adds liked message to this user
+        Function returns the number of messages the user has now liked.
+        """
 
         new_like = Likes(user_id=self.id, message_id=message_id)
         db.session.add(new_like)
@@ -174,7 +176,9 @@ class User(db.Model):
         return len(Likes.query.filter(Likes.user_id==self.id).all())
 
     def remove_like(self, message_id):
-        """Remove like from user's liked messages"""
+        """Remove like from user's liked messages
+        Function returns the number of messages the user has now liked.
+        """
 
         liked = Likes.query.get_or_404((self.id, message_id))
         db.session.delete(liked)
@@ -198,7 +202,14 @@ class User(db.Model):
             self.add_new_like(message_id)
 
     def get_my_likes(self):
-        """Returns list of likes this user's messages have gotten"""
+        """Return list of message instances that this user has liked"""
+
+        message_list = self.liked_messages
+        return message_list
+
+    def get_my_karma(self):
+        """Returns list of likes this user's messages have gotten
+        """
 
         messages_id_list = [message.id for message in self.messages]
         messages_id_set = set(messages_id_list)
