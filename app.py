@@ -404,7 +404,7 @@ def like_message(message_id):
         return redirect("/")
 
     msg = Message.query.get_or_404(message_id)
-
+    breakpoint()
     g.user.toggle_liked(msg.id)
 
     # url_parse = urlparse(request.referrer)
