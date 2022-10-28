@@ -168,10 +168,13 @@ class User(db.Model):
         """Adds liked message to this user
         Function returns the number of messages the user has now liked.
         """
-
+        
         new_like = Likes(user_id=self.id, message_id=message_id)
         db.session.add(new_like)
         db.session.commit()
+
+        #NOTE: DB concerns should be in app.py.
+        #TODO: what's better is to return new Like instance. let app.py commit THAT
 
         return len(Likes.query.filter(Likes.user_id==self.id).all())
 
@@ -185,11 +188,16 @@ class User(db.Model):
         db.session.commit()
 
         return len(Likes.query.filter(Likes.user_id==self.id).all())
+        # a lot of work to ignore entire NOTE:
+        # would use .count instead.
 
     def is_liked(self, message_id):
         """Check if message_id is liked by current user. Returns boolean"""
 
-        liked = Likes.query.filter(Likes.user_id==self.id, Likes.message_id==message_id).one_or_none()
+        liked = Likes.query.filter(
+                    Likes.user_id==self.id,
+                    Likes.message_id==message_id
+                ).one_or_none()
 
         return bool(liked)
 
@@ -208,8 +216,7 @@ class User(db.Model):
         return message_list
 
     def get_my_karma(self):
-        """Returns list of likes this user's messages have gotten
-        """
+        """Returns list of likes this user's messages have gotten"""
 
         messages_id_list = [message.id for message in self.messages]
         messages_id_set = set(messages_id_list)

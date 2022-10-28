@@ -4,7 +4,7 @@ Two questions
     a. it goes to top of page...
     b. we need to re-render html because jinja needs to fill/unfill stars!!
         i. so... cache-ing problem??
-        
+
 2. what is up with our db.relationship User <--> Liked Message
 
 3. what is in the session anyway?
@@ -30,3 +30,25 @@ That is why before every request, we write @app.before_request functions that ac
 
 What does @app.before_request mean?
 It runs every time, before any route (not unlike setUp in unittest)
+
+
+Question:
+stacking decorators on a single view function
+
+the internet stack overflow ppl be like:
+
+@app.get('/asdf/page')
+@app.get('/asdf/hello')
+def show_page():
+
+    #logic for parsing where they came from
+    if:
+        do
+    elif:
+        do something else
+
+A:
+maybe just for a referral catching page?... but you need a good reason to do things this way.
+
+middleware. before and after every request. do a lotta stuff
+authentication etc. So. stacking decorators not that weird. but parsing wherefrom, that would be a bit weird. 
