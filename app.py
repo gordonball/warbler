@@ -404,12 +404,16 @@ def like_message(message_id):
         return redirect("/")
 
     msg = Message.query.get_or_404(message_id)
+
     breakpoint()
+
     g.user.toggle_liked(msg.id)
 
+    # DEPRECATED: this does not work across all browsers/privacy extensions!
     # url_parse = urlparse(request.referrer)
     # path = url_parse.path
 
+    # should throw error if not in the form!
     go_back_to = request.form["from-url"]
     return redirect(go_back_to)
 

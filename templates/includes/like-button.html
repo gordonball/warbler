@@ -1,11 +1,18 @@
+<!-- Motif for like-button
+MUST HAVE:
+  current user in g.user
+  current message called "msg"
+-->
 {% if g.user.id != msg.user_id%}
 
 <form method="POST" action="/messages/{{ msg.id }}/like">
   {{ g.csrf_form.csrf_token }}
+  <input type="hidden" name="from-url" value="{{ request.url }}">
+
   <button class="messages-like-bottom">
     <i class="bi bi-hand-thumbs-up{% if g.user.is_liked(msg.id) %}-fill{% endif %}"></i>
   </button>
-  <input type="hidden" name="from-url" value="{{ request.url }}">
 
 {% endif %}
+
 
