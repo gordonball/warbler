@@ -7,9 +7,8 @@
 
 import os
 from unittest import TestCase
-
 from models import db, User, Message, Follows, connect_db
-
+from sqlalchemy import exc
 # BEFORE we import our app, let's set an environmental variable
 # to use a different database for tests (we need to do this
 # before we import our app, since that will have already
@@ -53,3 +52,45 @@ class UserModelTestCase(TestCase):
         # User should have no messages & no followers
         self.assertEqual(len(u1.messages), 0)
         self.assertEqual(len(u1.followers), 0)
+
+    def test_user_repr(self):
+        u1 = User.query.get(self.u1_id)
+        test_repr = u1.__repr__()
+
+        self.assertEqual(test_repr, f"<User #{u1.id}: {u1.username}, {u1.email}>")
+
+    def test_user_is_following(self):
+        u1 = User.query.get(self.u1_id)
+        u2 = User.query.get(self.u2_id)
+
+        self.assertFalse(u1.is_following(u2))
+        self.assertFalse(u2.is_followed_by(u1))
+
+        u1.following.append(u2)
+
+        self.assertTrue(u1.is_following(u2))
+        self.assertTrue(u2.is_followed_by(u1))
+
+    def test_user_signup(self):
+
+        with self.assertRaises(exc.IntegrityError):
+            User.signup("u3", None, "password", None)
+            db.session.flush()
+
+        db.session.rollback()
+
+        with self.assertRaises(exc.IntegrityError):
+            User.signup("u1", "email@email.com","password", "")
+            db.session.flush()
+
+        db.session.rollback()
+
+    def test_user_authenticate(self):
+
+        self.assertEqual(User.authenticate(
+                        "u1", "password"),
+                        User.query.get(self.u1_id))
+
+        self.assertFalse(User.authenticate("u1", ""))
+        self.assertFalse(User.authenticate("", "password"))
+

@@ -164,32 +164,34 @@ class User(db.Model):
             user for user in self.following if user == other_user]
         return len(found_user_list) == 1
 
-    def add_new_like(self, message_id):
-        """Adds liked message to this user
-        Function returns the number of messages the user has now liked.
-        """
-        
-        new_like = Likes(user_id=self.id, message_id=message_id)
-        db.session.add(new_like)
-        db.session.commit()
+    # DEPRECATED: used SQLAlchemy .append() and .remove()
+    # def add_new_like(self, message_id):
+    #     """Adds liked message to this user
+    #     Function returns new Likes instance.
+    #     """
 
-        #NOTE: DB concerns should be in app.py.
-        #TODO: what's better is to return new Like instance. let app.py commit THAT
+    #     return Likes(user_id=self.id, message_id=message_id)
 
-        return len(Likes.query.filter(Likes.user_id==self.id).all())
+    # def remove_like(self, message_id):
+    #     """Remove like from user's liked messages
+    #     Function returns the number of messages the user has now liked.
+    #     """
 
-    def remove_like(self, message_id):
-        """Remove like from user's liked messages
-        Function returns the number of messages the user has now liked.
-        """
+    #     liked = Likes.query.get_or_404((self.id, message_id))
+    #     db.session.delete(liked)
+    #     db.session.commit()
 
-        liked = Likes.query.get_or_404((self.id, message_id))
-        db.session.delete(liked)
-        db.session.commit()
+    #     return len(Likes.query.filter(Likes.user_id==self.id).all())
+    #     # a lot of work to ignore entire NOTE:
+    #     # would use .count instead.
 
-        return len(Likes.query.filter(Likes.user_id==self.id).all())
-        # a lot of work to ignore entire NOTE:
-        # would use .count instead.
+    # def toggle_liked(self, message_id):
+    #     """Toggles liked status of message"""
+
+    #     if self.is_liked(message_id):
+    #         self.remove_like(message_id)
+    #     else:
+    #         self.add_new_like(message_id)
 
     def is_liked(self, message_id):
         """Check if message_id is liked by current user. Returns boolean"""
@@ -201,13 +203,7 @@ class User(db.Model):
 
         return bool(liked)
 
-    def toggle_liked(self, message_id):
-        """Toggles liked status of message"""
 
-        if self.is_liked(message_id):
-            self.remove_like(message_id)
-        else:
-            self.add_new_like(message_id)
 
     def get_my_likes(self):
         """Return list of message instances that this user has liked"""

@@ -404,8 +404,9 @@ def delete_message(message_id):
 
 @app.post('/messages/<int:message_id>/like')
 def like_message(message_id):
-    """ Adds liked message to database and fills icon to show liked status.
-    TODO: fix docstring"""
+    """ Toggle liked message to database and fills icon to show liked status.
+        Redirects to previous page.
+    """
 
     if not g.user:
         flash("Access unauthorized.", "danger")
@@ -418,14 +419,14 @@ def like_message(message_id):
 
     msg = Message.query.get_or_404(message_id)
 
-    g.user.toggle_liked(msg.id)
+    # g.user.toggle_liked(msg.id)
 
     # a higher level approach. SQLAlchemy power user:
-    # if msg in g.user.liked_messages:
-    #     g.user.liked_messages.remove(msg)
-    # else:
-    #     g.user.liked_messages.append(msg)
-    # db.session.commit()
+    if msg in g.user.liked_messages:
+        g.user.liked_messages.remove(msg)
+    else:
+        g.user.liked_messages.append(msg)
+    db.session.commit()
 
     # DEPRECATED: this does not work across all browsers/privacy extensions!
     # url_parse = urlparse(request.referrer)
