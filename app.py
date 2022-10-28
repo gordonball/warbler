@@ -360,7 +360,7 @@ def show_message(message_id):
         return redirect("/")
 
     msg = Message.query.get_or_404(message_id)
-    return render_template('messages/show.html', message=msg)
+    return render_template('messages/show.html', msg=msg)
 
 
 @app.post('/messages/<int:message_id>/delete')
