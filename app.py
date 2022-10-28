@@ -60,6 +60,8 @@ def add_previous_url_to_g():
 ##############################################################################
 # app.after_requests---these run after every request!
 
+# NOT INCLUDED: suboptimal for our use case!
+
 # @app.after_request
 # def add_history_to_session(resp):
 #     """Add URL to history in the browser session"""
@@ -404,8 +406,6 @@ def like_message(message_id):
         return redirect("/")
 
     msg = Message.query.get_or_404(message_id)
-
-    breakpoint()
 
     g.user.toggle_liked(msg.id)
 
