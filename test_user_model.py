@@ -54,6 +54,8 @@ class UserModelTestCase(TestCase):
         self.assertEqual(len(u1.followers), 0)
 
     def test_user_repr(self):
+        """TODO: make docstrings for test fn also!!"""
+
         u1 = User.query.get(self.u1_id)
         test_repr = u1.__repr__()
 
@@ -79,6 +81,7 @@ class UserModelTestCase(TestCase):
 
         db.session.rollback()
 
+        # TODO: testing duplicate username. separate fn!
         with self.assertRaises(exc.IntegrityError):
             User.signup("u1", "email@email.com","password", "")
             db.session.flush()
@@ -87,10 +90,16 @@ class UserModelTestCase(TestCase):
 
     def test_user_authenticate(self):
 
-        self.assertEqual(User.authenticate(
-                        "u1", "password"),
-                        User.query.get(self.u1_id))
+        u1_auth = User.authenticate("u1", "password"),
+        u1 = User.query.get(self.u1_id)
+        self.assertEqual(u1, u1_auth)
 
+        # break these out! positive vs negative tests.
+        # the more test fn's the better.
         self.assertFalse(User.authenticate("u1", ""))
         self.assertFalse(User.authenticate("", "password"))
 
+    # def test_login_pos_1
+    # def test_login_invalid_username...
+    # def test_login_email... etc.
+    # def test_login_pos_3

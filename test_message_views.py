@@ -39,6 +39,9 @@ app.config['WTF_CSRF_ENABLED'] = False
 
 class MessageBaseViewTestCase(TestCase):
     def setUp(self):
+        #injection
+        Message.query.delete()
+        #end injection
         User.query.delete()
 
         u1 = User.signup("u1", "u1@email.com", "password", None)
@@ -58,9 +61,19 @@ class MessageAddViewTestCase(MessageBaseViewTestCase):
     def test_add_message(self):
         # Since we need to change the session to mimic logging in,
         # we need to use the changing-session trick:
-        with self.client as c:
-            with c.session_transaction() as sess:
+        with self.client as c: #this is a mere convenience
+            with c.session_transaction() as sess: #this is a black box. kinda.
                 sess[CURR_USER_KEY] = self.u1_id
+
+            # doesn't literally work but conceptually...
+            # sess = c.session_transaction()
+            # sess[CURR_USER_KEY] = self.u1_id
+
+            # ...testing...
+
+            # finally, sess.pop(CURR_USER_KEY)
+
+            # in other words, what is a context manager anyway?
 
             # Now, that session setting is saved, so we can have
             # the rest of ours test
@@ -69,3 +82,23 @@ class MessageAddViewTestCase(MessageBaseViewTestCase):
             self.assertEqual(resp.status_code, 302)
 
             Message.query.filter_by(text="Hello").one()
+
+
+    def test_delete_message(self):
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess[CURR_USER_KEY] = self.u1_id
+
+            resp = c.post(f"/messages/{self.m1_id}/delete")
+
+            self.assertEqual(resp.status_code, 302) #this is a post redirecting you.
+            #you can set follow_redirects to true and then test 200 for html. then search that html
+
+            #in our test... test messages text body can be distinct, and
+            # and then test you're on the correct page. it WAS there before. and THEN after delete it's not there.
+
+            #why is it 302 status code, where is the api?
+
+            test_list = Message.query.filter_by(id = self.m1_id).all()
+            self.assertEqual(len(test_list), 0)

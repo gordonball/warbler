@@ -43,10 +43,19 @@ class MessageModelTestCase(TestCase):
         self.u1_id = u1.id
         self.u2_id = u2.id
 
+        m1 = Message(
+            text = "This is a test",
+            timestamp = datetime.now(),
+            user_id = self.u1_id
+        )
+        m2 = Message(
+            text = "Test message please ignore",
+            timestamp = datetime.now(),
+            user_id = self.u2_id
+        )
 
-        m1 = Message("This is a test", datetime.now(), self.u1_id)
-        m2 = Message("Test message please ignore", datetime.now(), self.u2_id)
-
+        db.session.add(m1)
+        db.session.add(m2)
         db.session.commit()
         self.m1_id = m1.id
         self.m2_id = m2.id
@@ -64,25 +73,43 @@ class MessageModelTestCase(TestCase):
 
         m1.users_liked.append(u1)
 
-        self.assertIn(m1.users_liked, u1)
+        self.assertIn(u1, m1.users_liked)
 
-        with self.assertRaises(exc.IntegrityError):
-            m1.users_liked.append(None)
-            db.session.flush()
-        db.session.rollback()
+        # TODO:
+        # with self.assertRaises(exc.IntegrityError):
+        #     m1.users_liked.append('1') NOTE: this conflicts with db models! so that's why no integrity error.
+
+        #     bad_like = Like(user_id = , message_id = )
+        #     session add
+        #     session flush (NOTE: something like this for liking twice etc)
+
+        #     db.session.add()
+        #     db.session.flush()
+        # db.session.rollback()
 
     def test_add_message(self):
         u1 = User.query.get(self.u1_id)
 
         with self.assertRaises(exc.IntegrityError):
-            m1 = Message("", datetime.now(), None)
-            db.sessions.flush()
+            m1 = Message(
+                text = "",
+                timestamp = datetime.now(),
+                user_id = None
+            )
+            db.session.add(m1)
+            db.session.flush()
         db.session.rollback()
 
-        with self.assertRaises(exc.IntegrityError):
-            m2 = Message("This is a bad time.", 4, u1.id)
-            db.sessions.flush()
+        #TODO: ProgrammingError? is psql sassing me?
+        with self.assertRaises(exc.ProgrammingError):
+            m2 = Message(
+                text = "This is a bad time.",
+                timestamp = 4, # <---- bad datatype. not a great test.
+                user_id = u1.id
+            )
+            db.session.add(m2)
+            db.session.flush()
         db.session.rollback()
 
-
-
+        # violating referrential integrity, and also other stuff. is what IntegrityError means.
+        # TODO: also test a good case!
